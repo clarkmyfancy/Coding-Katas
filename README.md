@@ -1,7 +1,7 @@
 # Coding-Katas
 
-### Katas in Python
+### Written in Python
 - Number Names
 
-### Katas in Haskell
+### Written in Haskell
 - FizzBuzz
