@@ -1,0 +1,8 @@
+Name                         Stmts   Miss  Cover   Missing
+----------------------------------------------------------
+test_translator.py              20      0   100%
+test_translator_helpers.py      10      0   100%
+translator.py                  103      0   100%
+translator_helpers.py           14      0   100%
+----------------------------------------------------------
+TOTAL                          147      0   100%
