@@ -1,6 +1,8 @@
 #----------------
 # Python ignoring
 
+.DS_Store
+.DS_Store?
 **/.DS_Store
 __pycache__
 # virtual python environmen
