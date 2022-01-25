@@ -4,47 +4,35 @@ from translator_helpers import Helpers
 
 class Translator:
 
-    result = ""
-
-    segment_suffixes = [
-        "",
-        "thousand",
-        "million",
-        "billion",
-        "trillion",
-        "quadrillion"
-    ]
-
     def translate(self, number):
-
         if number == 0:
             result = "zero"
             return result
 
+        return self.parse_and_translate(number)
+
+    def parse_and_translate(self, number):
         original_number = number
         iteration = 0
-        # segment = self.get_segment(number, iteration)
-        current_number = self.get_segment(which_segment=iteration, number=number)
-        self.result += self.translate_segment(current_number)
-
-        current_magnitude_suffix = self.get_current_magnitude_suffix(number)
-        self.result += " " + current_magnitude_suffix if current_magnitude_suffix != "" else ""
-
-        number /= 1000
-        iteration += 1
-
+        result = ""
         while int(number) > 0 :
-            current_number = self.get_segment(which_segment=iteration, number=original_number)
+            current_number = self.get_segment(original_number, iteration)
             current_segment = self.translate_segment(current_number)
-            self.result += " " + current_segment if current_segment != "" else ""
-            current_magnitude_suffix = self.get_current_magnitude_suffix(number)
-            self.result += " " + current_magnitude_suffix if (current_magnitude_suffix != "") and (current_segment != "") else ""
+            result += self.generate_full_segment_translation(number, current_segment, iteration)
 
             number /= 1000
             iteration += 1
+        return result
 
-        #     self.result += ""
-        return self.result
+    def get_segment(self, number, which_segment):
+        # which_segment ->      1st  2nd  3rd ...
+        # number ->             123, 456, 789
+        commas = Helpers().get_number_of_commas_in_number(number)
+        if commas == 0:
+            return number
+        number = (number / math.pow(1000, commas - which_segment)) % 1000
+        
+        return int(number)
 
     def translate_segment(self, number):
         result = ""
@@ -64,18 +52,63 @@ class Translator:
 
         return result
 
-    def get_segment(self, which_segment, number):
-        commas = Helpers().get_number_of_commas_in_number(number)
-        if commas == 0:
-            return number
-        number = (number / math.pow(1000, commas - which_segment)) % 1000
+    def translate_three_digits(self, number):
+        result = ""
         
-        return int(number)
+        result += self.translate_single_digit(Helpers().get_first_digit(number))
+        result += ' hundred'
+        number = Helpers().left_shift(number)
+        
+        if number != 0:
+            result += ' and '
+        
+        if self.is_a_teen(number):
+            result += self.translate_teens(number)
+        elif Helpers().number_of_digits(number) == 2:
+            result += self.translate_last_two_digits(number)
+        else:
+            result += self.translate_single_digit(number)
+        return result
 
-    def there_are_commas_remaining(self, number):
-        pass
+    def translate_last_two_digits(self, number):
+        # number is in form: Yx
+        result = ''
 
-    def get_current_magnitude_suffix(self, number):
+        if self.is_a_teen(number):
+            result += self.translate_teens(number)
+            return result
+
+        first_digit = int(number / 10) * 10
+        result += self.translate_first_digit_of_two_digit_number(first_digit)
+        
+        second_digit = number % 10
+        if second_digit != 0:
+            result += ' '
+        result += self.translate_single_digit(second_digit)
+        
+        return result
+
+    def generate_full_segment_translation(self, number, current_segment, iteration):
+
+        segment_was_all_zeros = True if current_segment == "" else False
+        its_the_first_iteration = True if iteration == 0 else False
+
+        current_magnitude_suffix = self.get_magnitude_suffix(number)
+        no_magnitude_suffix__is_required = True if self.get_magnitude_suffix(number) == "" else False
+
+        segment = ""
+        if its_the_first_iteration or segment_was_all_zeros:
+            segment += current_segment
+        else:
+            segment += " " + current_segment
+
+        if no_magnitude_suffix__is_required or segment_was_all_zeros:
+            segment += ""
+        else:
+            segment += " " + current_magnitude_suffix
+        return segment
+
+    def get_magnitude_suffix(self, number):
         comma_replacements_with_context = {
             0: "",
             1: "thousand",
@@ -90,9 +123,6 @@ class Translator:
     
     def is_a_single_digit(self, number):
         return number >= 0 and number < 10
-    
-    def is_a_teen(self, number):
-        return number >= 10 and number < 20
     
     def translate_single_digit(self, number):
         result = ""
@@ -115,6 +145,9 @@ class Translator:
         elif number == 9:
             result = "nine"
         return result
+
+    def is_a_teen(self, number):
+        return number >= 10 and number < 20
     
     def translate_teens(self, number):
         result = ""
@@ -141,24 +174,6 @@ class Translator:
             result = "nineteen"
         return result
     
-    def translate_last_two_digits(self, number):
-        # number is in form: Yx
-        result = ''
-
-        if self.is_a_teen(number):
-            result += self.translate_teens(number)
-            return result
-
-        first_digit = int(number / 10) * 10
-        result += self.translate_first_digit_of_two_digit_number(first_digit)
-        
-        second_digit = number % 10
-        if second_digit != 0:
-            result += ' '
-        result += self.translate_single_digit(second_digit)
-        
-        return result
-        
     def translate_first_digit_of_two_digit_number(self, number):
         result = ""
         if number == 20:
@@ -177,22 +192,4 @@ class Translator:
             result = "eighty"
         elif number == 90:
             result = "ninety"
-        return result
-    
-    def translate_three_digits(self, number):
-        result = ""
-        
-        result += self.translate_single_digit(Helpers().get_first_digit(number))
-        result += ' hundred'
-        number = Helpers().left_shift(number)
-        
-        if number != 0:
-            result += ' '
-        
-        if self.is_a_teen(number):
-            result += self.translate_teens(number)
-        elif Helpers().number_of_digits(number) == 2:
-            result += self.translate_last_two_digits(number)
-        else:
-            result += self.translate_single_digit(number)
         return result
