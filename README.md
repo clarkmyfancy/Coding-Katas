@@ -5,4 +5,4 @@
 - Vending Machine (TDD practice including mocks)
 
 ### Written in Haskell
-- FizzBuzz
+- FizzBuzz (using TDD)
