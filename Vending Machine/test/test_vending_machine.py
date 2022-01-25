@@ -31,9 +31,9 @@ class TestVendingMachine(unittest.TestCase):
 
         msg = "Quarter should have been accepted"
         self.assertEqual("Accept", VendingMachine().consume_coin(quarter), msg)
-        msg = "Quarter should have been accepted"
+        msg = "Dime should have been accepted"
         self.assertEqual("Accept", VendingMachine().consume_coin(dime), msg)
-        msg = "Quarter should have been accepted"
+        msg = "Nickle should have been accepted"
         self.assertEqual("Accept", VendingMachine().consume_coin(nickle), msg)
 
 
