@@ -14,25 +14,29 @@ class TestVendingMachine(unittest.TestCase):
         failure_message = "Pennies should have been rejected"
         self.assertEqual("Reject", VendingMachine().consume_coin(penny), failure_message)
 
-
     @patch("src.Coin.coin.Coin")
-    def test_should_accept_valid_coins(self, mocked_coin):
+    def test_should_accept_valid_quarters(self, mocked_coin):
         quarter = mocked_coin()
         quarter.size = 3
         quarter.weight = 3
 
+        msg = "Quarter should have been accepted"
+        self.assertEqual("Accept", VendingMachine().consume_coin(quarter), msg)
+
+    @patch("src.Coin.coin.Coin")
+    def test_should_accept_valid_dimes(self, mocked_coin):
         dime = mocked_coin()
         dime.size = .5
         dime.weight = .5
+        msg = "Dime should have been accepted"
+        self.assertEqual("Accept", VendingMachine().consume_coin(dime), msg)
 
+    @patch("src.Coin.coin.Coin")
+    def test_should_accept_valid_nickles(self, mocked_coin):
         nickle = mocked_coin()
         nickle.size = 1
         nickle.weight = .5
 
-        msg = "Quarter should have been accepted"
-        self.assertEqual("Accept", VendingMachine().consume_coin(quarter), msg)
-        msg = "Dime should have been accepted"
-        self.assertEqual("Accept", VendingMachine().consume_coin(dime), msg)
         msg = "Nickle should have been accepted"
         self.assertEqual("Accept", VendingMachine().consume_coin(nickle), msg)
 
