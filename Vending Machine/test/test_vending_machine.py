@@ -40,6 +40,19 @@ class TestVendingMachine(unittest.TestCase):
         msg = "Nickle should have been accepted"
         self.assertEqual("Accept", VendingMachine().consume_coin(nickle), msg)
 
+    @patch("src.Coin.coin.Coin")
+    def test_should_put_rejected_coins_into_coin_return_slot(self, mocked_coin):
+
+        v = VendingMachine()
+        for _ in range(4):
+            penny = mocked_coin()
+            penny.size = 1
+            penny.weight = 1
+            v.consume_coin(penny)
+
+        msg = "The inserted pennies were not rejected"
+        self.assertEqual(4, len(v.get_contents_of_coin_return_slot()), msg)
+
 
 if __name__ == '__main__':
     unittest.main()  # pragma: no cover
