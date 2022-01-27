@@ -5,7 +5,7 @@ class VendingMachine:
 
   def __init__(self):
     self.coin_return_slot = []
-    self.virtual_wallet = []
+    self.session_wallet = []
 
   def consume_coin(self, coin):
     result = ""
@@ -14,12 +14,12 @@ class VendingMachine:
       self.coin_return_slot.append(coin)
     else:
       result = "Accept"
-      self.virtual_wallet.append(coin)
+      self.session_wallet.append(coin)
     return result
 
 
   def get_contents_of_coin_return_slot(self):
     return self.coin_return_slot
 
-  def get_contents_of_virtual_wallet(self):
-    return self.virtual_wallet
+  def get_contents_of_session_wallet(self):
+    return self.session_wallet

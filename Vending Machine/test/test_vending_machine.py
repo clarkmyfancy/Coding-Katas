@@ -58,7 +58,7 @@ class TestVendingMachine(unittest.TestCase):
         self.assertEqual(4, len(self.v.get_contents_of_coin_return_slot()), msg)
 
     @patch("src.Coin.coin.Coin")
-    def test_should_add_valid_coins_to_virtual_wallet(self, mocked_coin):
+    def test_should_add_valid_coins_to_session_wallet(self, mocked_coin):
 
         quarter = mocked_coin()
         quarter.size = 3
@@ -72,7 +72,7 @@ class TestVendingMachine(unittest.TestCase):
         self.v.consume_coin(nickle)
 
         msg = "The valid coins were not added to virtual wallet"
-        self.assertEqual(2, len(self.v.get_contents_of_virtual_wallet()), msg)
+        self.assertEqual(2, len(self.v.get_contents_of_session_wallet()), msg)
 
 
 
