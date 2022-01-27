@@ -1,8 +1,8 @@
 # Coding-Katas
 
 ### Written in Python
-- Number Names (using TDD)
-- Vending Machine (TDD practice including mocks)
+- Number Names 
+- Vending Machine
 
 ### Written in Haskell
 - FizzBuzz (using TDD)
