@@ -87,6 +87,11 @@ class TestVendingMachine(unittest.TestCase):
         quarter.weight = 3
         self.v.consume_coin(quarter)
         self.v.consume_coin(quarter)
+
+        penny = mocked_coin()
+        penny.size = 1
+        penny.weight = 1
+        self.v.consume_coin(penny)
         
         msg = "The valid coins were not added in the correct format"
         expectation = {
