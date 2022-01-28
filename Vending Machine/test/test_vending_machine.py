@@ -71,9 +71,30 @@ class TestVendingMachine(unittest.TestCase):
         self.v.consume_coin(quarter)
         self.v.consume_coin(nickle)
 
-        msg = "The valid coins were not added to virtual wallet"
-        self.assertEqual(2, len(self.v.get_contents_of_session_wallet()), msg)
+        msg = "The valid coins were not added to session wallet"
+        self.assertEqual(2, self.v.get_number_of_coins_in_session_wallet(), msg)
 
+    @patch("src.Coin.coin.Coin")
+    def test_should_add_valid_coins_in_correct_format(self, mocked_coin):
+
+        dime = mocked_coin()
+        dime.size = .5
+        dime.weight = .5
+        self.v.consume_coin(dime)
+
+        quarter = mocked_coin()
+        quarter.size = 3
+        quarter.weight = 3
+        self.v.consume_coin(quarter)
+        self.v.consume_coin(quarter)
+        
+        msg = "The valid coins were not added in the correct format"
+        expectation = {
+            "Quarters": 2,
+            "Dimes": 1,
+            "Nickles": 0
+        }
+        self.assertEqual(expectation, self.v.get_contents_of_session_wallet(), msg)
 
 
 if __name__ == '__main__':
